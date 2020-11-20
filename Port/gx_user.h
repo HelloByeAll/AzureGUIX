@@ -17,9 +17,6 @@
 
 #ifndef __TX_USER_H
 #define __TX_USER_H
-#define GX_INCLUDE_USER_DEFINE_FILE
-#define GX_DISABLE_THREADX_BINDING
-#define GUIX_BINDING_RT_THREAD
 //#include "tx_user.h"
 #include "gx_api.h"
 

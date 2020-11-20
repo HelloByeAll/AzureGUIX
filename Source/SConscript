@@ -1,0 +1,18 @@
+
+from building import *
+import rtconfig
+
+cwd     = GetCurrentDir()
+src     = Glob('common/src/*.c')
+CPPPATH = [cwd + '/common/inc']
+CPPPATH += [cwd + '/ports/cortex_m4/ac6/inc']
+
+CPPDEFINES = ['GX_INCLUDE_USER_DEFINE_FILE']
+CPPDEFINES += ['GX_DISABLE_THREADX_BINDING']
+CPPDEFINES += ['GUIX_BINDING_RT_THREAD']
+
+src += Glob('Port/gx_system_rtos_bind_rtthread.c')
+group = DefineGroup('GUIX/Source', src, depend = ['PKG_USING_AZUREGUIX'], CPPPATH = CPPPATH, CPPDEFINES = CPPDEFINES)
+
+
+Return('group')

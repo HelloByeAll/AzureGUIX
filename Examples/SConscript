@@ -1,0 +1,11 @@
+
+from building import *
+import rtconfig
+
+cwd     = GetCurrentDir()
+CPPPATH = [cwd]
+src     = Glob('*.c')
+
+group = DefineGroup('GUIX/Examples', src, depend = ['PKG_USING_AZUREGUIX'], CPPPATH = CPPPATH)
+
+Return('group')

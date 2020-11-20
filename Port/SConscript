@@ -1,0 +1,12 @@
+
+from building import *
+import rtconfig
+
+cwd     = GetCurrentDir()
+src     = Glob('gx_system_rtos_bind_rtthread.c')
+
+CPPPATH = [cwd]
+
+group = DefineGroup('GUIX/Port', src, depend = ['PKG_USING_AZUREGUIX'], CPPPATH = CPPPATH)
+
+Return('group')
