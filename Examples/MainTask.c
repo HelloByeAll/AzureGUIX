@@ -21,7 +21,6 @@
 *                                             宏定义
 *********************************************************************************************************
 */
-#define STM32_SCREEN_HANDLE 0x2000B000
 
 /*
 *********************************************************************************************************
@@ -32,7 +31,7 @@ GX_WINDOW *pScreen;
 GX_WINDOW_ROOT *root;
 extern ULONG display_1_canvas_memory[512];
 
-uint8_t display_2_canvas_memory[2048];
+uint8_t oled_canvas_memory[2048];
 extern void lcd_address(uint8_t page, uint8_t column);
 extern void transfer_data(uint8_t *data, uint8_t len);
 
@@ -48,11 +47,11 @@ void GuiDrawPoint(uint8_t x, uint8_t y, uint8_t color)
     uint16_t page = y / 8;
     /* 添加用户代码 */
     if (color == 1)
-        display_2_canvas_memory[page * 128 + x] &= ~(color << i);
+        oled_canvas_memory[page * 128 + x] &= ~(color << i);
     else
     {
         color = 1;
-        display_2_canvas_memory[page * 128 + x] |= color << i;
+        oled_canvas_memory[page * 128 + x] |= color << i;
     }
 }
 
@@ -97,7 +96,7 @@ static void stm32_monochrome_buffer_toggle(GX_CANVAS *canvas, GX_RECTANGLE *dirt
     for (int i = 0; i < 16; i++)
     {
         lcd_address(i + 1, 1);
-        transfer_data(&display_2_canvas_memory[i * 128], 128);
+        transfer_data(&oled_canvas_memory[i * 128], 128);
     }
 }
 
@@ -111,7 +110,7 @@ static void stm32_monochrome_buffer_toggle(GX_CANVAS *canvas, GX_RECTANGLE *dirt
 */
 UINT stm32_graphics_driver_setup_monochrome(GX_DISPLAY *display)
 {
-    _gx_display_driver_monochrome_setup(display, (VOID *)STM32_SCREEN_HANDLE, stm32_monochrome_buffer_toggle);
+    _gx_display_driver_monochrome_setup(display, (VOID *)display_1_canvas_memory, stm32_monochrome_buffer_toggle);
 
     return (GX_SUCCESS);
 }
@@ -126,10 +125,10 @@ UINT stm32_graphics_driver_setup_monochrome(GX_DISPLAY *display)
 */
 void MainTask(void)
 {
-	extern void lcd_init(void);
-	
-	lcd_init();
-	
+    extern void lcd_init(void);
+
+    lcd_init();
+
     /*初始化配置 */
     gx_system_initialize();
 
