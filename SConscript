@@ -7,9 +7,9 @@ src     = Glob('Source/common/src/*.c')
 CPPPATH = [cwd + 'Source/common/inc']
 LOCAL_CCFLAGS = ''
 
-if GetDepend(['GUIX_BINDING_RT_THREAD']):
+if GetDepend(['PKG_USING_AZUREGUIX']):
     src += Glob('Port/gx_system_rtos_bind_rtthread.c')
 
-group = DefineGroup('GUIX/Source', src, depend = ['GX_THREADX_BINDING'], CPPPATH = CPPPATH, LOCAL_CCFLAGS = LOCAL_CCFLAGS)
+group = DefineGroup('GUIX/Source', src, depend = ['PKG_USING_AZUREGUIX'], CPPPATH = CPPPATH, LOCAL_CCFLAGS = LOCAL_CCFLAGS)
 
 Return('group')
