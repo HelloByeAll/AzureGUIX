@@ -28,3 +28,4 @@ extern void transfer_data(uint8_t *data, uint8_t len);
 
 
 使用GUIX Studio可打开GUIX Studio OLED Demo中的工程
+GUIX Studio生成的文件需要替换Example文件夹中的同名文件才能生效

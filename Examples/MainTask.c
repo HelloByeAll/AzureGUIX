@@ -150,10 +150,10 @@ void MainTask(void)
     }
 }
 
+/* 调用此函数可更换主题 */
 void gui_theme_switching(void)
 {
-    static USHORT theme_id;
-    theme_id = DISPLAY_1_THEME_2;
+    static USHORT theme_id = DISPLAY_1_THEME_2;
 
     if (++theme_id >= DISPLAY_1_THEME_TABLE_SIZE)
         theme_id = 0;
@@ -161,4 +161,5 @@ void gui_theme_switching(void)
     gx_studio_display_configure(DISPLAY_1, stm32_graphics_driver_setup_monochrome,
                                 LANGUAGE_ENGLISH, theme_id, &root);
 }
+MSH_CMD_EXPORT(gui_theme_switching, gui_theme_switching);
 /***************************** 安富莱电子 www.armfly.com (END OF FILE) *********************************/
