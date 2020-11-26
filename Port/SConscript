@@ -5,6 +5,9 @@ import rtconfig
 cwd     = GetCurrentDir()
 src     = Glob('gx_system_rtos_bind_rtthread.c')
 
+if GetDepend(['GUIX_VIRTUAL_DISPLAY_MONO']):
+    src += Glob('guix_virtual_display_mono.c')
+    
 CPPPATH = [cwd]
 
 group = DefineGroup('GUIX/Port', src, depend = ['PKG_USING_AZUREGUIX'], CPPPATH = CPPPATH)

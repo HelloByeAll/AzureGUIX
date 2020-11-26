@@ -1,20 +1,21 @@
-/**************************************************************************/
-/**************************************************************************/
-/**                                                                       */
-/** GUIX Component                                                        */
-/**                                                                       */
-/**   System Management (System)                                          */
-/**                                                                       */
-/**************************************************************************/
-
-//#define GX_SOURCE_CODE
+/* 
+*	模块名称 : guix rt-thread兼容层
+*	文件名称 : gx_system_rtos_bind_rtthread.c
+*	版    本 : V1.0
+*	说    明 : 
+*              
+*	修改记录 :
+*		版本号   日期         作者          说明
+*       V1.0    2020-11-20   HelloByeAll    首版           
+*        
+*
+*/
 
 /* Include necessary system files.  */
 
 #include "gx_api.h"
 #include "gx_system.h"
 #include "gx_system_rtos_bind.h"
-
 
 #ifndef GX_THREADX_BINDING
 
@@ -49,7 +50,6 @@ char guix_timer_task_stack[GX_TIMER_TASK_STACK_SIZE];
 /* define semaphore for lock/unlock macros */
 struct rt_mutex guix_system_lock_mutex;
 
-
 struct rt_thread guix_tcb;
 struct rt_thread guix_timer_tcb;
 
@@ -65,12 +65,12 @@ typedef struct guix_linked_event_struct
 
 typedef struct guix_event_queue_struct
 {
-    GUIX_LINKED_EVENT *first;    /* first (oldest) event in fifo */
-    GUIX_LINKED_EVENT *last;     /* last (newest) event in fifo  */
-    GUIX_LINKED_EVENT *free;     /* linked list of free events   */
-    GUIX_LINKED_EVENT *free_end; /* end of the free list         */
+    GUIX_LINKED_EVENT *first;      /* first (oldest) event in fifo */
+    GUIX_LINKED_EVENT *last;       /* last (newest) event in fifo  */
+    GUIX_LINKED_EVENT *free;       /* linked list of free events   */
+    GUIX_LINKED_EVENT *free_end;   /* end of the free list         */
     struct rt_semaphore count_sem; /* number of queued events      */
-    struct rt_mutex lock;        /* lock to protect queue update */
+    struct rt_mutex lock;          /* lock to protect queue update */
 } GUIX_EVENT_QUEUE;
 
 /* an array of GX_EVENTs used to implement fifo queue */
@@ -111,7 +111,8 @@ VOID gx_generic_rtos_initialize(VOID)
     rt_sem_init(&guix_event_queue.count_sem, "gx_queue_count", 0, RT_IPC_FLAG_FIFO);
 }
 
-VOID (*gx_system_thread_entry)(ULONG);
+VOID(*gx_system_thread_entry)
+(ULONG);
 
 // A small shell function to convert the void * arg expected by uC/OS to
 // a ULONG parameter expected by GUIX thread entry
@@ -387,3 +388,5 @@ VOID gx_generic_time_delay(int ticks)
 #endif //(GUIX_BINDING_RT_THREAD)
 
 #endif //(GX_THREADX_BINDING)
+
+/*************************************** (END OF FILE) ****************************************/

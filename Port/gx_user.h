@@ -17,7 +17,6 @@
 
 #ifndef __TX_USER_H
 #define __TX_USER_H
-//#include "tx_user.h"
 #include "gx_api.h"
 
 /*

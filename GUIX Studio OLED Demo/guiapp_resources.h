@@ -6,7 +6,7 @@
 /*  Studio User Guide, or visit our web site at azure.com/rtos                 */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.0.0                                               */
-/*  Date (dd.mm.yyyy): 13.11.2020   Time (hh:mm): 10:10                        */
+/*  Date (dd.mm.yyyy): 24.11.2020   Time (hh:mm): 22:29                        */
 /*******************************************************************************/
 
 
@@ -40,8 +40,9 @@
 
 /* Pixelmap ID definitions                                                     */
 
-#define GX_PIXELMAP_ID_YXYL_LOGO 5
-#define DISPLAY_1_PIXELMAP_TABLE_SIZE 6
+#define GX_PIXELMAP_ID_QQ__20201124221312 5
+#define GX_PIXELMAP_ID_YXYL_LOGO 6
+#define DISPLAY_1_PIXELMAP_TABLE_SIZE 7
 
 /* String Ids                                                                  */
 
@@ -55,6 +56,7 @@
 #define GX_STRING_ID_STRING_8 8
 #define GX_STRING_ID_STRING_9 9
 #define GX_STRING_ID_STRING_10 10
-#define DISPLAY_1_STRING_TABLE_SIZE 11
+#define GX_STRING_ID_STRING_11 11
+#define DISPLAY_1_STRING_TABLE_SIZE 12
 
 #endif                                       /* sentry                         */

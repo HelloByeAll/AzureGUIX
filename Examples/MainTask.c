@@ -8,9 +8,10 @@
 *              
 *	修改记录 :
 *		版本号   日期         作者          说明
-*		V1.0    2020-11-15   Eric2013  	    首版    
-*                                     
-*	Copyright (C), 2020-2030, 安富莱电子 www.armfly.com
+*		V1.0    2020-11-15   Eric2013  	    安富莱电子 www.armfly.com    
+*       V1.1    2020-11-20   HelloByeAll    移植到rt-thrad           
+*       V1.2    2020-11-26   HelloByeAll    添加虚拟mono设备
+* 
 *
 *********************************************************************************************************
 */
@@ -74,6 +75,11 @@ static void stm32_monochrome_buffer_toggle(GX_CANVAS *canvas, GX_RECTANGLE *dirt
     /* 获得OLED画布的地址 */
     p = (uint8_t *)display_1_canvas_memory;
 
+#ifdef GUIX_VIRTUAL_DISPLAY_MONO
+    extern void show_virtual_display(rt_uint8_t * p);
+    show_virtual_display(p);
+#endif // GUIX_VIRTUAL_DISPLAY_MONO
+
     /* 将画布的内容绘制到OLED显存 */
 
     for (int y = 0; y < 128; y++)
@@ -136,18 +142,13 @@ void MainTask(void)
     gx_studio_display_configure(DISPLAY_1, stm32_graphics_driver_setup_monochrome,
                                 LANGUAGE_ENGLISH, DISPLAY_1_THEME_2, &root);
     /* 创建窗口 */
-    gx_studio_named_widget_create("window", (GX_WIDGET *)root, (GX_WIDGET **)&pScreen);
-
+    gx_studio_named_widget_create("window", (GX_WIDGET *)GX_NULL, (GX_WIDGET **)&pScreen);
+    gx_studio_named_widget_create("window_1", (GX_WIDGET *)root, (GX_WIDGET **)&pScreen);
     /* 显示根窗口 */
     gx_widget_show(root);
 
     /* 启动GUIX */
     gx_system_start();
-
-    while (1)
-    {
-        rt_thread_mdelay(20);
-    }
 }
 
 /* 调用此函数可更换主题 */
@@ -162,4 +163,4 @@ void gui_theme_switching(void)
                                 LANGUAGE_ENGLISH, theme_id, &root);
 }
 MSH_CMD_EXPORT(gui_theme_switching, gui_theme_switching);
-/***************************** 安富莱电子 www.armfly.com (END OF FILE) *********************************/
+/*************************************** (END OF FILE) ****************************************/

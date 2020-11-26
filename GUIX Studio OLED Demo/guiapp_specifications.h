@@ -6,7 +6,7 @@
 /*  GUIX Studio User Guide, or visit our web site at azure.com/rtos            */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.0.0                                               */
-/*  Date (dd.mm.yyyy): 13.11.2020   Time (hh:mm): 10:10                        */
+/*  Date (dd.mm.yyyy): 24.11.2020   Time (hh:mm): 22:29                        */
 /*******************************************************************************/
 
 
@@ -22,8 +22,9 @@ extern   "C" {
 
 /* Define widget ids                                                           */
 
-#define GUIX_ID_WINDOW0 1
-#define GUI_ID_TextButton0 2
+#define GUIX_ID_WINDOW_Logo 1
+#define GUIX_ID_WINDOW_Main 2
+#define GUI_ID_TextButton0 3
 
 
 /* Define animation ids                                                        */
@@ -35,6 +36,32 @@ extern   "C" {
 
 #define GX_NEXT_USER_EVENT_ID GX_FIRST_USER_EVENT
 
+#define GX_ACTION_FLAG_DYNAMIC_TARGET 0x01
+#define GX_ACTION_FLAG_DYNAMIC_PARENT 0x02
+#define GX_ACTION_FLAG_POP_TARGET     0x04
+#define GX_ACTION_FLAG_POP_PARENT     0x08
+
+typedef struct GX_STUDIO_ACTION_STRUCT
+{
+    GX_UBYTE opcode;
+    GX_UBYTE flags;
+    GX_CONST VOID *parent;
+    GX_CONST VOID *target;
+    GX_CONST GX_ANIMATION_INFO  *animation;
+} GX_STUDIO_ACTION;
+
+typedef struct GX_STUDIO_EVENT_ENTRY_STRUCT
+{
+    ULONG event_type;
+    USHORT event_sender;
+    GX_CONST GX_STUDIO_ACTION *action_list;
+} GX_STUDIO_EVENT_ENTRY;
+
+typedef struct GX_STUDIO_EVENT_PROCESS_STRUCT 
+{
+    GX_CONST GX_STUDIO_EVENT_ENTRY *event_table;
+    UINT (*chain_event_handler)(GX_WIDGET *, GX_EVENT *);
+} GX_STUDIO_EVENT_PROCESS;
 
 /* Declare properties structures for each utilized widget type                 */
 
@@ -79,39 +106,29 @@ typedef struct
 
 typedef struct
 {
-    GX_RESOURCE_ID string_id;
-    GX_RESOURCE_ID font_id;
-    GX_RESOURCE_ID normal_text_color_id;
-    GX_RESOURCE_ID selected_text_color_id;
-    GX_RESOURCE_ID disabled_text_color_id;
-} GX_PROMPT_PROPERTIES;
-
-typedef struct
-{
     GX_RESOURCE_ID wallpaper_id;
 } GX_WINDOW_PROPERTIES;
 
 
 /* Declare top-level control blocks                                            */
 
-typedef struct WINDOW_1_CONTROL_BLOCK_STRUCT
-{
-    GX_WINDOW_MEMBERS_DECLARE
-    GX_TEXT_BUTTON window_1_button;
-    GX_PROMPT window_1_prompt;
-} WINDOW_1_CONTROL_BLOCK;
-
 typedef struct WINDOW_CONTROL_BLOCK_STRUCT
 {
     GX_WINDOW_MEMBERS_DECLARE
 } WINDOW_CONTROL_BLOCK;
 
+typedef struct WINDOW_1_CONTROL_BLOCK_STRUCT
+{
+    GX_WINDOW_MEMBERS_DECLARE
+    GX_TEXT_BUTTON window_1_button;
+} WINDOW_1_CONTROL_BLOCK;
+
 
 /* extern statically defined control blocks                                    */
 
 #ifndef GUIX_STUDIO_GENERATED_FILE
-extern WINDOW_1_CONTROL_BLOCK window_1;
 extern WINDOW_CONTROL_BLOCK window;
+extern WINDOW_1_CONTROL_BLOCK window_1;
 #endif
 
 /* Declare event process functions, draw functions, and callback functions     */
@@ -142,11 +159,11 @@ typedef struct GX_STUDIO_DISPLAY_INFO_STRUCT
 /* Declare Studio-generated functions for creating top-level widgets           */
 
 UINT gx_studio_text_button_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
-UINT gx_studio_prompt_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
 UINT gx_studio_window_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
 GX_WIDGET *gx_studio_widget_create(GX_BYTE *storage, GX_CONST GX_STUDIO_WIDGET *definition, GX_WIDGET *parent);
 UINT gx_studio_named_widget_create(char *name, GX_WIDGET *parent, GX_WIDGET **new_widget);
 UINT gx_studio_display_configure(USHORT display, UINT (*driver)(GX_DISPLAY *), GX_UBYTE language, USHORT theme, GX_WINDOW_ROOT **return_root);
+UINT gx_studio_auto_event_handler(GX_WIDGET *widget, GX_EVENT *event_ptr, GX_CONST GX_STUDIO_EVENT_PROCESS *record);
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard
   C conditional started above.                                                 */

@@ -6,7 +6,7 @@
 /*  Studio User Guide, or visit our web site at azure.com/rtos                 */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.0.0                                               */
-/*  Date (dd.mm.yyyy): 13.11.2020   Time (hh:mm): 10:10                        */
+/*  Date (dd.mm.yyyy): 24.11.2020   Time (hh:mm): 22:29                        */
 /*******************************************************************************/
 
 
@@ -200,6 +200,43 @@ GX_CONST GX_PIXELMAP DISPLAY_1_THEME_1_CHECKBOX_OFF_pixelmap =
     16                                       /* height in pixel                */
 };
 
+/* THEME_1_QQ__20201124221312 pixelmap data                                    */
+
+static GX_CONST GX_UBYTE DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap_data[211] =
+{
+    0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 0xff, 
+    0xff, 0x97, 0xff, 0xff, 0x97, 0xf3, 0x9d, 0xff, 0x03, 0xeb, 0xad, 0xfb, 0xe7, 
+    0xb5, 0xf7, 0xe3, 0xbd, 0xf3, 0xdf, 0x95, 0x03, 0x8d, 0x03, 0x95, 0xef, 0xdf, 
+    0x91, 0x13, 0x01, 0x03, 0x01, 0x01, 0x8b, 0x91, 0xef, 0xdf, 0x91, 0x03, 0x95, 
+    0x03, 0x91, 0xef, 0xdb, 0x95, 0x13, 0x01, 0x03, 0x01, 0x01, 0x8b, 0x95, 0xeb, 
+    0xdb, 0x99, 0x03, 0x8d, 0x03, 0x99, 0xeb, 0xdb, 0xcd, 0xeb, 0xdb, 0xa1, 0x07, 
+    0x03, 0xa1, 0xeb, 0xdb, 0x91, 0xa7, 0x91, 0xeb, 0xdb, 0xcd, 0xeb, 0xd7, 0xd1, 
+    0xeb, 0xd7, 0xd5, 0xe7, 0xd7, 0xd5, 0xe7, 0xd3, 0xdd, 0xe3, 0xd3, 0x8d, 0x07, 
+    0x03, 0xad, 0x03, 0x91, 0xe3, 0xd3, 0x8d, 0x07, 0x03, 0x8d, 0xa7, 0x8d, 0xe3, 
+    0xcf, 0x91, 0x07, 0x03, 0x8d, 0xa7, 0x91, 0xdf, 0xcf, 0x91, 0x07, 0x03, 0x8d, 
+    0xa7, 0x91, 0xdf, 0xcf, 0x91, 0x07, 0x03, 0x8d, 0xa7, 0x91, 0xdf, 0xcf, 0x91, 
+    0xbf, 0x91, 0xdf, 0xcf, 0x91, 0xbf, 0x91, 0xdf, 0xcb, 0x89, 0x03, 0x89, 0xb7, 
+    0x89, 0x0b, 0x01, 0x01, 0xdf, 0xcf, 0x09, 0x03, 0x03, 0x89, 0xb7, 0x89, 0x0b, 
+    0x03, 0x01, 0xdf, 0xdf, 0x89, 0xaf, 0x89, 0xef, 0xe3, 0x89, 0xa7, 0x89, 0xf3, 
+    0xe3, 0x95, 0x8f, 0x95, 0xf3, 0xeb, 0xc1, 0xe7, 0xf3, 0xb9, 0xe7, 0xff, 0xff, 
+    0x97, 0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 0xff, 0xff, 0x97, 
+    0xff, 0xff, 0x97
+};
+GX_CONST GX_PIXELMAP DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap =
+{
+    0x00000001,                              /* major version                  */
+    0x00000000,                              /* minor version                  */
+    GX_PIXELMAP_COMPRESSED|GX_PIXELMAP_TRANSPARENT,         /* flags           */
+    GX_COLOR_FORMAT_MONOCHROME,              /* Format                         */
+    (GX_UBYTE *) DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap_data,
+    sizeof(DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap_data),    /* the size of pixelmap_data*/
+    NULL,
+    0,                                       /* auxiliary data size            */
+    0x00,                                    /* used for transparent iamges    */
+    70,                                      /* width in pixel                 */
+    43                                       /* height in pixel                */
+};
+
 /* THEME_1_YXYL_LOGO pixelmap data                                             */
 
 static GX_CONST GX_UBYTE DISPLAY_1_THEME_1_YXYL_LOGO_pixelmap_data[785] =
@@ -291,6 +328,7 @@ GX_CONST GX_PIXELMAP *display_1_theme_1_pixelmap_table[] =
     &DISPLAY_1_THEME_1_RADIO_OFF_pixelmap,
     &DISPLAY_1_THEME_1_CHECKBOX_ON_pixelmap,
     &DISPLAY_1_THEME_1_CHECKBOX_OFF_pixelmap,
+    &DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap,
     &DISPLAY_1_THEME_1_YXYL_LOGO_pixelmap
 };
 GX_CONST GX_PIXELMAP *display_1_theme_2_pixelmap_table[] =
@@ -300,6 +338,7 @@ GX_CONST GX_PIXELMAP *display_1_theme_2_pixelmap_table[] =
     &DISPLAY_1_THEME_1_RADIO_OFF_pixelmap,
     &DISPLAY_1_THEME_1_CHECKBOX_ON_pixelmap,
     &DISPLAY_1_THEME_1_CHECKBOX_OFF_pixelmap,
+    &DISPLAY_1_THEME_1_QQ__20201124221312_pixelmap,
     &DISPLAY_1_THEME_1_YXYL_LOGO_pixelmap
 };
 
@@ -315,10 +354,11 @@ GX_CONST GX_UBYTE display_1_STRING_7_English[] = "The Second Window";
 GX_CONST GX_UBYTE display_1_STRING_8_English[] = "The Third Window";
 GX_CONST GX_UBYTE display_1_STRING_9_English[] = "armfly";
 GX_CONST GX_UBYTE display_1_STRING_10_English[] = "armbbs";
+GX_CONST GX_UBYTE display_1_STRING_11_English[] = "this is btn";
 
 /* String Table for display_1 language English                                 */
 
-GX_CONST GX_STRING display_1_English_string_table[11] =
+GX_CONST GX_STRING display_1_English_string_table[12] =
 {
     {GX_NULL, 0},
     {(GX_CONST GX_CHAR *)display_1_STRING_1_English, sizeof(display_1_STRING_1_English) - 1},
@@ -330,7 +370,8 @@ GX_CONST GX_STRING display_1_English_string_table[11] =
     {(GX_CONST GX_CHAR *)display_1_STRING_7_English, sizeof(display_1_STRING_7_English) - 1},
     {(GX_CONST GX_CHAR *)display_1_STRING_8_English, sizeof(display_1_STRING_8_English) - 1},
     {(GX_CONST GX_CHAR *)display_1_STRING_9_English, sizeof(display_1_STRING_9_English) - 1},
-    {(GX_CONST GX_CHAR *)display_1_STRING_10_English, sizeof(display_1_STRING_10_English) - 1}
+    {(GX_CONST GX_CHAR *)display_1_STRING_10_English, sizeof(display_1_STRING_10_English) - 1},
+    {(GX_CONST GX_CHAR *)display_1_STRING_11_English, sizeof(display_1_STRING_11_English) - 1}
 };
 
 /*  Language Table                                                             */
@@ -379,7 +420,7 @@ GX_THEME display_1_theme_1 =
     GX_SCROLLBAR_RELATIVE_THUMB|GX_SCROLLBAR_END_BUTTONS|GX_SCROLLBAR_HORIZONTAL,
     29,                                      /* color table size               */
     4,                                       /* font table size                */
-    6,                                       /* pixelmap table size            */
+    7,                                       /* pixelmap table size            */
     0                                        /* palette size                   */
 
 };
@@ -422,7 +463,7 @@ GX_THEME display_1_theme_2 =
     GX_SCROLLBAR_RELATIVE_THUMB|GX_SCROLLBAR_END_BUTTONS|GX_SCROLLBAR_HORIZONTAL,
     29,                                      /* color table size               */
     4,                                       /* font table size                */
-    6,                                       /* pixelmap table size            */
+    7,                                       /* pixelmap table size            */
     0                                        /* palette size                   */
 
 };
