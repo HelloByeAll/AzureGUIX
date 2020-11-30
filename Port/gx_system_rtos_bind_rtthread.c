@@ -87,6 +87,8 @@ VOID gx_generic_rtos_initialize(VOID)
     guix_timer_event_pending = GX_FALSE;
     rt_mutex_init(&guix_system_lock_mutex, "gx_system_lock", RT_IPC_FLAG_FIFO);
 
+    gx_system_memory_allocator_set(rt_malloc, rt_free);
+
     /* initialize a custom fifo queue structure */
 
     guix_event_queue.first = GX_NULL;
@@ -111,8 +113,7 @@ VOID gx_generic_rtos_initialize(VOID)
     rt_sem_init(&guix_event_queue.count_sem, "gx_queue_count", 0, RT_IPC_FLAG_FIFO);
 }
 
-VOID(*gx_system_thread_entry)
-(ULONG);
+VOID(*gx_system_thread_entry)(ULONG);
 
 // A small shell function to convert the void * arg expected by uC/OS to
 // a ULONG parameter expected by GUIX thread entry
