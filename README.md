@@ -1,6 +1,8 @@
 # AzureGUIX
 
-改软件包目前只有单色屏，RGB屏需自行修改驱动接口。请阅读pdf寻找修改方式
+2021-01-14
+增加ART-PI SPI屏驱动
+
 
 调用MainTask.c中的MainTask();即可完成初始化
 

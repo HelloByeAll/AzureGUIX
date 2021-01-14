@@ -7,7 +7,7 @@
 *	修改记录 :
 *		版本号   日期         作者          说明
 *       V1.0    2020-11-20   HelloByeAll    首版           
-*        
+*       V1.1    2020-12-03   HelloByeAll    修改互斥量等初始化方法  
 *
 */
 
@@ -48,7 +48,7 @@ char guix_task_stack[GX_THREAD_STACK_SIZE];
 char guix_timer_task_stack[GX_TIMER_TASK_STACK_SIZE];
 
 /* define semaphore for lock/unlock macros */
-struct rt_mutex guix_system_lock_mutex;
+static rt_mutex_t guix_system_lock_mutex;
 
 struct rt_thread guix_tcb;
 struct rt_thread guix_timer_tcb;
@@ -65,12 +65,12 @@ typedef struct guix_linked_event_struct
 
 typedef struct guix_event_queue_struct
 {
-    GUIX_LINKED_EVENT *first;      /* first (oldest) event in fifo */
-    GUIX_LINKED_EVENT *last;       /* last (newest) event in fifo  */
-    GUIX_LINKED_EVENT *free;       /* linked list of free events   */
-    GUIX_LINKED_EVENT *free_end;   /* end of the free list         */
-    struct rt_semaphore count_sem; /* number of queued events      */
-    struct rt_mutex lock;          /* lock to protect queue update */
+    GUIX_LINKED_EVENT *first;    /* first (oldest) event in fifo */
+    GUIX_LINKED_EVENT *last;     /* last (newest) event in fifo  */
+    GUIX_LINKED_EVENT *free;     /* linked list of free events   */
+    GUIX_LINKED_EVENT *free_end; /* end of the free list         */
+    rt_sem_t count_sem;          /* number of queued events      */
+    rt_mutex_t lock;             /* lock to protect queue update */
 } GUIX_EVENT_QUEUE;
 
 /* an array of GX_EVENTs used to implement fifo queue */
@@ -85,10 +85,10 @@ VOID gx_generic_rtos_initialize(VOID)
     GUIX_LINKED_EVENT *current;
 
     guix_timer_event_pending = GX_FALSE;
-    rt_mutex_init(&guix_system_lock_mutex, "gx_system_lock", RT_IPC_FLAG_FIFO);
+
+    guix_system_lock_mutex = rt_mutex_create("gx_system_lock", RT_IPC_FLAG_FIFO);
 
     gx_system_memory_allocator_set(rt_malloc, rt_free);
-
     /* initialize a custom fifo queue structure */
 
     guix_event_queue.first = GX_NULL;
@@ -107,13 +107,14 @@ VOID gx_generic_rtos_initialize(VOID)
     guix_event_queue.free_end = current;
 
     /* create mutex for lock access to this queue */
-    rt_mutex_init(&guix_event_queue.lock, "gx_queue_lock", RT_IPC_FLAG_FIFO);
+    guix_event_queue.lock = rt_mutex_create("gx_queue_lock", RT_IPC_FLAG_FIFO);
 
     /* create counting semaphore to track queue entries */
-    rt_sem_init(&guix_event_queue.count_sem, "gx_queue_count", 0, RT_IPC_FLAG_FIFO);
+    guix_event_queue.count_sem = rt_sem_create("gx_queue_count", 0, RT_IPC_FLAG_FIFO);
 }
 
-VOID(*gx_system_thread_entry)(ULONG);
+VOID(*gx_system_thread_entry)
+(ULONG);
 
 // A small shell function to convert the void * arg expected by uC/OS to
 // a ULONG parameter expected by GUIX thread entry
@@ -161,13 +162,13 @@ UINT gx_generic_event_post(GX_EVENT *event_ptr)
     GUIX_LINKED_EVENT *linked_event;
 
     /* lock down the guix event queue */
-    rt_mutex_take(&guix_event_queue.lock, RT_WAITING_FOREVER);
+    rt_mutex_take(guix_event_queue.lock, RT_WAITING_FOREVER);
 
     /* grab a free event slot */
     if (!guix_event_queue.free)
     {
         /* there are no free events, return failure */
-        rt_mutex_release(&guix_event_queue.lock);
+        rt_mutex_release(guix_event_queue.lock);
         return GX_FAILURE;
     }
 
@@ -195,10 +196,10 @@ UINT gx_generic_event_post(GX_EVENT *event_ptr)
     guix_event_queue.last = linked_event;
 
     /* Unlock the guix queue */
-    rt_mutex_release(&guix_event_queue.lock);
+    rt_mutex_release(guix_event_queue.lock);
 
     /* increment event count */
-    rt_sem_release(&guix_event_queue.count_sem);
+    rt_sem_release(guix_event_queue.count_sem);
     return GX_SUCCESS;
 }
 
@@ -209,7 +210,7 @@ UINT gx_generic_event_fold(GX_EVENT *event_ptr)
 
     /* Lock down the guix queue */
 
-    rt_mutex_take(&guix_event_queue.lock, RT_WAITING_FOREVER);
+    rt_mutex_take(guix_event_queue.lock, RT_WAITING_FOREVER);
 
     // see if the same event is already in the queue:
     pTest = guix_event_queue.first;
@@ -220,7 +221,7 @@ UINT gx_generic_event_fold(GX_EVENT *event_ptr)
         {
             /* found matching event, update it and return */
             pTest->event_data.gx_event_payload.gx_event_ulongdata = event_ptr->gx_event_payload.gx_event_ulongdata;
-            rt_mutex_release(&guix_event_queue.lock);
+            rt_mutex_release(guix_event_queue.lock);
             return GX_SUCCESS;
         }
         pTest = pTest->next;
@@ -228,7 +229,7 @@ UINT gx_generic_event_fold(GX_EVENT *event_ptr)
 
     /* did not find a match, push new event */
 
-    rt_mutex_release(&guix_event_queue.lock);
+    rt_mutex_release(guix_event_queue.lock);
     gx_generic_event_post(event_ptr);
     return GX_SUCCESS;
 }
@@ -246,10 +247,10 @@ UINT gx_generic_event_pop(GX_EVENT *put_event, GX_BOOL wait)
     }
 
     /* wait for an event to arrive in queue */
-    rt_sem_take(&guix_event_queue.count_sem, RT_WAITING_FOREVER);
+    rt_sem_take(guix_event_queue.count_sem, RT_WAITING_FOREVER);
 
     /* lock down the queue */
-    rt_mutex_take(&guix_event_queue.lock, RT_WAITING_FOREVER);
+    rt_mutex_take(guix_event_queue.lock, RT_WAITING_FOREVER);
 
     /* copy the event into destination */
     *put_event = guix_event_queue.first->event_data;
@@ -280,7 +281,7 @@ UINT gx_generic_event_pop(GX_EVENT *put_event, GX_BOOL wait)
     }
 
     /* unlock the queue */
-    rt_mutex_release(&guix_event_queue.lock);
+    rt_mutex_release(guix_event_queue.lock);
     return GX_SUCCESS;
 }
 
@@ -292,7 +293,7 @@ VOID gx_generic_event_purge(GX_WIDGET *target)
 
     /* Lock down the guix queue */
 
-    rt_mutex_take(&guix_event_queue.lock, RT_WAITING_FOREVER);
+    rt_mutex_take(guix_event_queue.lock, RT_WAITING_FOREVER);
 
     // look for events targetted to widget or widget children:
     pTest = guix_event_queue.first;
@@ -320,7 +321,7 @@ VOID gx_generic_event_purge(GX_WIDGET *target)
         pTest = pTest->next;
     }
 
-    rt_mutex_release(&guix_event_queue.lock);
+    rt_mutex_release(guix_event_queue.lock);
 }
 
 /* start the RTOS timer */
@@ -338,13 +339,13 @@ VOID gx_generic_timer_stop(VOID)
 /* lock the system protection mutex */
 VOID gx_generic_system_mutex_lock(VOID)
 {
-    rt_mutex_take(&guix_system_lock_mutex, RT_WAITING_FOREVER);
+    rt_mutex_take(guix_system_lock_mutex, RT_WAITING_FOREVER);
 }
 
 /* unlock system protection mutex */
 VOID gx_generic_system_mutex_unlock(VOID)
 {
-    rt_mutex_release(&guix_system_lock_mutex);
+    rt_mutex_release(guix_system_lock_mutex);
 }
 
 /* return number of low-level system timer ticks. Used for pen speed caculations */
